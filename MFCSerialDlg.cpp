@@ -60,7 +60,7 @@ BOOL CMFCSerialDlg::OnInitDialog()
 
 	m_Combo_Baudrate_List.AddString(_T("9600"));
 	m_Combo_Baudrate_List.AddString(_T("19200"));
-	m_Combo_Baudrate_List.AddString(_T("115200"));
+	m_Combo_Baudrate_List.AddString(_T("38400"));
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
