@@ -235,7 +235,7 @@ BOOL CMycomm::Create(HWND hWnd)
 		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, 
 		NULL); 
 	
-	if (m_hComDev != INVALID_HANDLE_VALUE) 
+	if (m_hComDev != INVALID_HANDLE_VALUE)
 		m_bIsOpenned = TRUE; 
 	else 
 		return FALSE; 

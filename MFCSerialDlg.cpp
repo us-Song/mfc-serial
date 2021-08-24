@@ -7,6 +7,7 @@
 #include "MFCSerial.h"
 #include "MFCSerialDlg.h"
 #include "afxdialogex.h"
+#include "CMycomm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -39,6 +40,8 @@ void CMFCSerialDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CMFCSerialDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BT_CONNECT, &CMFCSerialDlg::OnBnClickedBtConnect)
+	ON_BN_CLICKED(IDC_BT_SEND, &CMFCSerialDlg::OnBnClickedBtSend)
 END_MESSAGE_MAP()
 
 
@@ -61,6 +64,12 @@ BOOL CMFCSerialDlg::OnInitDialog()
 	m_Combo_Baudrate_List.AddString(_T("9600"));
 	m_Combo_Baudrate_List.AddString(_T("19200"));
 	m_Combo_Baudrate_List.AddString(_T("38400"));
+
+	comport_state = false;
+	GetDlgItem(IDC_BT_CONNECT)->SetWindowTextW(_T("OPEN"));
+	m_Str_Comport = _T("COM3");
+	m_Str_Baudrate = _T("38400");
+	UpdateData(FALSE);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -99,5 +108,50 @@ void CMFCSerialDlg::OnPaint()
 HCURSOR CMFCSerialDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+
+
+void CMFCSerialDlg::OnBnClickedBtConnect()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	if (comport_state)
+	{
+		if (m_comm)
+		{
+			m_comm->Close();
+			m_comm = NULL;
+			AfxMessageBox(_T("COM 포트닫힘"));
+			comport_state = false;
+			GetDlgItem(IDC_BT_CONNECT)->SetWindowTextW(_T("Open"));
+			GetDlgItem(IDC_BT_SEND)->EnableWindow(false);
+		}
+	}
+	else
+	{
+		m_comm = new CMycomm(_T("\\\\.\\") + m_Str_Comport, m_Str_Baudrate, _T("NONE"), _T("8 Bit"), _T("1 Bit"));
+		if (m_comm->Create(GetSafeHwnd()) != 0)
+		{
+			AfxMessageBox(_T("COM 포트열림"));
+			comport_state = true;
+			GetDlgItem(IDC_BT_CONNECT)->SetWindowTextW(_T("CLOSE"));
+			GetDlgItem(IDC_BT_SEND)->EnableWindow(true);
+		}
+		else
+		{
+			AfxMessageBox(_T("ERROR!"));
+		}
+	}
+}
+
+
+void CMFCSerialDlg::OnBnClickedBtSend()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CString str;
+	GetDlgItem(IDC_EDIT_SEND_DATA)->GetWindowText(str);
+	//str += "";
+	m_comm->Send(str, str.GetLength());
 }
 
