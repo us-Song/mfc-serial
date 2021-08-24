@@ -30,4 +30,11 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	CComboBox m_Combo_Comport_List;
+	CString m_Str_Comport;
+	CComboBox m_Combo_Baudrate_List;
+	CString m_Str_Baudrate;
+	CEdit m_Edit_Rcv_View;
+	CEdit m_Edit_Send_Data;
 };

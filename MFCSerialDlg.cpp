@@ -19,6 +19,8 @@
 
 CMFCSerialDlg::CMFCSerialDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCSERIAL_DIALOG, pParent)
+	, m_Str_Comport(_T(""))
+	, m_Str_Baudrate(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -26,6 +28,12 @@ CMFCSerialDlg::CMFCSerialDlg(CWnd* pParent /*=nullptr*/)
 void CMFCSerialDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_COMBO1_COMPORT, m_Combo_Comport_List);
+	DDX_CBString(pDX, IDC_COMBO1_COMPORT, m_Str_Comport);
+	DDX_Control(pDX, IDC_COMBO2_BAUDRATE, m_Combo_Baudrate_List);
+	DDX_CBString(pDX, IDC_COMBO2_BAUDRATE, m_Str_Baudrate);
+	DDX_Control(pDX, IDC_EDIT_RCV_VIEW, m_Edit_Rcv_View);
+	DDX_Control(pDX, IDC_EDIT_SEND_DATA, m_Edit_Send_Data);
 }
 
 BEGIN_MESSAGE_MAP(CMFCSerialDlg, CDialogEx)
