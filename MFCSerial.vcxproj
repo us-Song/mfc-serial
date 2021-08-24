@@ -183,6 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CMycomm.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFCSerial.h" />
     <ClInclude Include="MFCSerialDlg.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CMycomm.cpp" />
     <ClCompile Include="MFCSerial.cpp" />
     <ClCompile Include="MFCSerialDlg.cpp" />
     <ClCompile Include="pch.cpp">
