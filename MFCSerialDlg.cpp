@@ -55,6 +55,13 @@ BOOL CMFCSerialDlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 
+	m_Combo_Comport_List.AddString(_T("COM3"));
+	m_Combo_Comport_List.AddString(_T("COM4"));
+
+	m_Combo_Baudrate_List.AddString(_T("9600"));
+	m_Combo_Baudrate_List.AddString(_T("19200"));
+	m_Combo_Baudrate_List.AddString(_T("115200"));
+
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
