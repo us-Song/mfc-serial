@@ -13,21 +13,22 @@
 
 CMycomm::CMycomm()
 {
-	if (m_bIsOpenned) 
-		Close(); 
 	
-	delete m_pEvent;
 }
 
 CMycomm::~CMycomm()
 {
+	if (m_bIsOpenned)
+		Close();
+
+	delete m_pEvent;
 }
 
 CMycomm::CMycomm(CString port, CString baudrate, CString parity, CString databit, CString stopbit) 
 { 
 	m_sComPort = port; 
 	m_sBaudRate = baudrate; 
-	m_sParity = parity; 
+	m_sParity = "None"; 
 	m_sDataBit = databit; 
 	m_sStopBit = stopbit; 
 	m_bFlowChk = 1; 
@@ -44,6 +45,7 @@ void CMycomm::ResetSerial()
 	COMMTIMEOUTS CommTimeOuts; 
 	if (!m_bIsOpenned) 
 		return; 
+
 	ClearCommError(m_hComDev, &DErr, NULL); 
 	SetupComm(m_hComDev, InBufSize, OutBufSize); 
 	PurgeComm(m_hComDev, PURGE_TXABORT | PURGE_RXABORT | PURGE_TXCLEAR | PURGE_RXCLEAR); 
@@ -64,6 +66,7 @@ void CMycomm::ResetSerial()
 
 	dcb.fBinary = TRUE; 
 	dcb.fParity = TRUE; 
+
 	if (m_sBaudRate == "300") 
 		dcb.BaudRate = CBR_300; 
 	else if (m_sBaudRate == "600")
@@ -106,16 +109,19 @@ void CMycomm::ResetSerial()
 		dcb.BaudRate = 6450; 
 	else if (m_sBaudRate == "PCI_500K") 
 		dcb.BaudRate = 56000; 
+
 	if (m_sParity == "None") 
 		dcb.Parity = NOPARITY; 
 	else if (m_sParity == "Even") 
 		dcb.Parity = EVENPARITY; 
 	else if (m_sParity == "Odd") 
 		dcb.Parity = ODDPARITY; 
+
 	if (m_sDataBit == "7 Bit") 
 		dcb.ByteSize = 7; 
 	else if (m_sDataBit == "8 Bit") 
 		dcb.ByteSize = 8; 
+
 	if (m_sStopBit == "1 Bit") 
 		dcb.StopBits = ONESTOPBIT; 
 	else if (m_sStopBit == "1.5 Bit") 
@@ -163,8 +169,10 @@ UINT CommThread(LPVOID lpData)
 	COMSTAT ComStat; 
 	DWORD EvtMask; 
 	char buf[MAXBUF]; 
-	DWORD Length; int size; 
+	DWORD Length; 
+	int size; 
 	int insize = 0; 
+
 	CMycomm* Comm = (CMycomm*)lpData;
 	
 	while (Comm->m_bIsOpenned) 
@@ -175,7 +183,6 @@ UINT CommThread(LPVOID lpData)
 		memset(buf, '\0', MAXBUF); 
 		// 포트에 수신된 정보가 있을때까지 대기 
 		WaitCommEvent(Comm->m_hComDev, &EvtMask, NULL); 
-		
 		ClearCommError(Comm->m_hComDev, &ErrorFlags, &ComStat); 
 		if ((EvtMask & EV_RXCHAR) && ComStat.cbInQue) 
 		{ 
@@ -246,6 +253,7 @@ BOOL CMycomm::Create(HWND hWnd)
 	m_OLW.OffsetHigh = 0;
 	m_OLR.Offset = 0; 
 	m_OLR.OffsetHigh = 0; 
+
 	m_OLR.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL); 
 	
 	if (m_OLR.hEvent == NULL) 
@@ -276,14 +284,15 @@ BOOL CMycomm::Send(LPCTSTR outbuf, int len)
 	DWORD BytesSent = 0; 
 	ClearCommError(m_hComDev, &ErrorFlags, &ComStat); 
 	
-	if (!WriteFile(m_hComDev, outbuf, len, &BytesWritten, &m_OLW)) 
+	if (!WriteFile(m_hComDev, outbuf, len, &BytesWritten, &m_OLW)) //성공이면 true(1), 에러거나 비동기면 false(0)반환
 	{ 
-		if (GetLastError() == ERROR_IO_PENDING) 
+		if (GetLastError() == ERROR_IO_PENDING)//비동기 입출력 완료일 경우
 		{ 
-			if (WaitForSingleObject(m_OLW.hEvent, 1000) != WAIT_OBJECT_0) 
+			if (WaitForSingleObject(m_OLW.hEvent, 1000) != WAIT_OBJECT_0) //시그널 상태가 되었을때 건너뜀
 				bRet = FALSE; 
 			else 
-				GetOverlappedResult(m_hComDev, &m_OLW, &BytesWritten, FALSE); } 
+				GetOverlappedResult(m_hComDev, &m_OLW, &BytesWritten, FALSE); // 바이트수 얻는 함수,성공시 0이아닌 반환값, 실패시 0반환, write의 인수인 overlapped 구조체를 인수로 하여 write의 결과를 얻게해줌
+		} 
 		else /* I/O error */ 
 			bRet = FALSE; /* ignore error */ 
 	} 
@@ -301,6 +310,7 @@ int CMycomm::Receive(LPSTR inbuf, int len)
 		return -1; 
 	else if (len > MAXBUF) 
 		return -1; 
+
 	if (m_nLength == 0) 
 	{ 
 		inbuf[0] = '\0'; 

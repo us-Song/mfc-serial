@@ -9,6 +9,7 @@
 #include "afxdialogex.h"
 #include "CMycomm.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -42,6 +43,9 @@ BEGIN_MESSAGE_MAP(CMFCSerialDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BT_CONNECT, &CMFCSerialDlg::OnBnClickedBtConnect)
 	ON_BN_CLICKED(IDC_BT_SEND, &CMFCSerialDlg::OnBnClickedBtSend)
+
+	ON_MESSAGE(WM_MYCLOSE, &CMFCSerialDlg::OnThreadClosed)
+	ON_MESSAGE(WM_MYRECEIVE, &CMFCSerialDlg::OnReceive)
 END_MESSAGE_MAP()
 
 
@@ -67,8 +71,10 @@ BOOL CMFCSerialDlg::OnInitDialog()
 
 	comport_state = false;
 	GetDlgItem(IDC_BT_CONNECT)->SetWindowTextW(_T("OPEN"));
+
 	m_Str_Comport = _T("COM3");
 	m_Str_Baudrate = _T("38400");
+
 	UpdateData(FALSE);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -110,6 +116,33 @@ HCURSOR CMFCSerialDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+LRESULT CMFCSerialDlg::OnThreadClosed(WPARAM length, LPARAM lpara)
+{
+	((CMycomm*)lpara);
+	delete ((CMycomm*)lpara);
+	return 0;
+}
+
+
+LRESULT CMFCSerialDlg::OnReceive(WPARAM length, LPARAM lpara)
+{
+	CString str;
+	char data[10000];
+	if (m_comm)
+	{
+		m_comm->Receive(data, length);
+		data[length] = _T('\0');
+		str += _T("\r\n");
+		for (int i = 0; i < length; i++)
+		{
+			str += data[i];
+		}
+		m_Edit_Rcv_View.ReplaceSel(str);
+		m_Edit_Rcv_View.LineScroll(m_Edit_Rcv_View.GetLineCount());
+		str = "";
+		
+	}
+}
 
 
 void CMFCSerialDlg::OnBnClickedBtConnect()
@@ -130,7 +163,7 @@ void CMFCSerialDlg::OnBnClickedBtConnect()
 	}
 	else
 	{
-		m_comm = new CMycomm(_T("\\\\.\\") + m_Str_Comport, m_Str_Baudrate, _T("NONE"), _T("8 Bit"), _T("1 Bit"));
+		m_comm = new CMycomm(m_Str_Comport, m_Str_Baudrate, _T("NONE"), _T("8 Bit"), _T("1 Bit"));
 		if (m_comm->Create(GetSafeHwnd()) != 0)
 		{
 			AfxMessageBox(_T("COM 포트열림"));
@@ -151,7 +184,8 @@ void CMFCSerialDlg::OnBnClickedBtSend()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	CString str;
 	GetDlgItem(IDC_EDIT_SEND_DATA)->GetWindowText(str);
-	//str += "";
+	str += "\r\n";
 	m_comm->Send(str, str.GetLength());
+	AfxMessageBox(str);
 }
 

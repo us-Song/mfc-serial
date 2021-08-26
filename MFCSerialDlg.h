@@ -10,7 +10,7 @@ class CMFCSerialDlg : public CDialogEx
 {
 // 생성입니다.
 public:
-	CMFCSerialDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
+	CMFCSerialDlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
 	CMycomm* m_comm;
 	LRESULT OnThreadClosed(WPARAM length, LPARAM lpara);
