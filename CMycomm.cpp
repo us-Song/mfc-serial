@@ -282,9 +282,19 @@ BOOL CMycomm::Send(LPCTSTR outbuf, int len)
 	COMSTAT ComStat; 
 	DWORD BytesWritten; 
 	DWORD BytesSent = 0; 
+
 	ClearCommError(m_hComDev, &ErrorFlags, &ComStat); 
 	
-	if (!WriteFile(m_hComDev, outbuf, len, &BytesWritten, &m_OLW)) //성공이면 true(1), 에러거나 비동기면 false(0)반환
+	char* temp; //변환한 wchar 저장
+
+	int strSize = WideCharToMultiByte(CP_ACP, 0, outbuf, -1, NULL, 0, NULL, NULL);//유니코드->멀티바이트, wchar 변수길이구함
+
+	temp = new char[strSize];
+
+	WideCharToMultiByte(CP_ACP, 0, outbuf, -1, temp, strSize, 0, 0);//형 변환
+	
+
+	if (!WriteFile(m_hComDev, temp, strlen(temp), &BytesWritten, &m_OLW)) //성공이면 true(1), 에러거나 비동기면 false(0)반환
 	{ 
 		if (GetLastError() == ERROR_IO_PENDING)//비동기 입출력 완료일 경우
 		{ 
