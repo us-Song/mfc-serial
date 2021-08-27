@@ -43,4 +43,6 @@ public:
 	CEdit m_Edit_Send_Data;
 	afx_msg void OnBnClickedBtConnect();
 	afx_msg void OnBnClickedBtSend();
+	afx_msg void OnBnClickedBtOn();
+	afx_msg void OnBnClickedBtOff();
 };

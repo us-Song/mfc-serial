@@ -69,46 +69,12 @@ void CMycomm::ResetSerial()
 
 	if (m_sBaudRate == "300") 
 		dcb.BaudRate = CBR_300; 
-	else if (m_sBaudRate == "600")
-		dcb.BaudRate = CBR_600; 
-	else if (m_sBaudRate == "1200") 
-		dcb.BaudRate = CBR_1200; 
-	else if (m_sBaudRate == "2400") 
-		dcb.BaudRate = CBR_2400; 
-	else if (m_sBaudRate == "4800") 
-		dcb.BaudRate = CBR_4800; 
 	else if (m_sBaudRate == "9600") 
 		dcb.BaudRate = CBR_9600; 
-	else if (m_sBaudRate == "14400") 
-		dcb.BaudRate = CBR_14400; 
 	else if (m_sBaudRate == "19200") 
 		dcb.BaudRate = CBR_19200; 
-	else if (m_sBaudRate == "28800") 
-		dcb.BaudRate = CBR_38400; 
-	else if (m_sBaudRate == "33600") 
-		dcb.BaudRate = CBR_38400; 
 	else if (m_sBaudRate == "38400") 
 		dcb.BaudRate = CBR_38400; 
-	else if (m_sBaudRate == "56000") 
-		dcb.BaudRate = CBR_56000; 
-	else if (m_sBaudRate == "57600") 
-		dcb.BaudRate = CBR_57600; 
-	else if (m_sBaudRate == "115200") 
-		dcb.BaudRate = CBR_115200; 
-	else if (m_sBaudRate == "128000") 
-		dcb.BaudRate = CBR_128000; 
-	else if (m_sBaudRate == "256000") 
-		dcb.BaudRate = CBR_256000; 
-	else if (m_sBaudRate == "PCI_9600") 
-		dcb.BaudRate = 1075; 
-	else if (m_sBaudRate == "PCI_19200") 
-		dcb.BaudRate = 2212; 
-	else if (m_sBaudRate == "PCI_38400") 
-		dcb.BaudRate = 4300; 
-	else if (m_sBaudRate == "PCI_57600") 
-		dcb.BaudRate = 6450; 
-	else if (m_sBaudRate == "PCI_500K") 
-		dcb.BaudRate = 56000; 
 
 	if (m_sParity == "None") 
 		dcb.Parity = NOPARITY; 
@@ -287,9 +253,9 @@ BOOL CMycomm::Send(LPCTSTR outbuf, int len)
 	
 	char* temp; //변환한 wchar 저장
 
-	int strSize = WideCharToMultiByte(CP_ACP, 0, outbuf, -1, NULL, 0, NULL, NULL);//유니코드->멀티바이트, wchar 변수길이구함
+	int strSize = WideCharToMultiByte(CP_ACP, 0, outbuf, -1, NULL, 0, NULL, NULL);//유니코드->멀티바이트, wchar 사이즈구함
 
-	temp = new char[strSize];
+	temp = new char[strSize];//사이즈만큼 할당
 
 	WideCharToMultiByte(CP_ACP, 0, outbuf, -1, temp, strSize, 0, 0);//형 변환
 	

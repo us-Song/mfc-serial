@@ -46,6 +46,8 @@ BEGIN_MESSAGE_MAP(CMFCSerialDlg, CDialogEx)
 
 	ON_MESSAGE(WM_MYCLOSE, &CMFCSerialDlg::OnThreadClosed)
 	ON_MESSAGE(WM_MYRECEIVE, &CMFCSerialDlg::OnReceive)
+	ON_BN_CLICKED(IDC_BT_ON, &CMFCSerialDlg::OnBnClickedBtOn)
+	ON_BN_CLICKED(IDC_BT_OFF, &CMFCSerialDlg::OnBnClickedBtOff)
 END_MESSAGE_MAP()
 
 
@@ -189,3 +191,21 @@ void CMFCSerialDlg::OnBnClickedBtSend()
 	AfxMessageBox(str);
 }
 
+
+
+void CMFCSerialDlg::OnBnClickedBtOn()
+{
+	CString str;
+	str = "setbrightness 0 50\r\n";
+	m_comm->Send(str, str.GetLength());
+
+}
+
+
+void CMFCSerialDlg::OnBnClickedBtOff()
+{
+	CString str;
+	str = "setbrightness 0 0\r\n";
+	m_comm->Send(str, str.GetLength());
+
+}
