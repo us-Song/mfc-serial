@@ -1,15 +1,7 @@
-﻿// CMycomm.cpp: 구현 파일
-//
-
+﻿
 #include "pch.h"
 #include "MFCSerial.h"
 #include "CMycomm.h"
-
-
-// CMycomm
-
-
-
 
 CMycomm::CMycomm()
 {
@@ -281,7 +273,7 @@ BOOL CMycomm::Send(LPCTSTR outbuf, int len)
 int CMycomm::Receive(LPSTR inbuf, int len) 
 {
 	CSingleLock lockObj((CSyncObject*)m_pEvent, FALSE); 
-	// argument value is not valid 
+
 	if (len == 0) 
 		return -1; 
 	else if (len > MAXBUF) 

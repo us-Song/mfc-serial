@@ -1,6 +1,9 @@
 ﻿
-#pragma once
+#ifndef _CMYCOMM_H
+#define _CMYCOMM_H
+
 #include "afxwin.h" 
+
 #define MAXBUF 50000 
 #define InBufSize 50000 
 #define OutBufSize 50000 
@@ -8,8 +11,6 @@
 #define ASCII_XOFF 0x13 
 #define WM_MYRECEIVE (WM_USER+1) //데이터 수신 메시지 
 #define WM_MYCLOSE (WM_USER+2) // 종료 메시지
-
-
 
 class CMycomm : public CCmdTarget
 {
@@ -41,6 +42,7 @@ public:
 	CMycomm(CString port, CString baudrate, CString parity, CString databit, CString stopbit);
 };
 
+#endif
 
 
 
