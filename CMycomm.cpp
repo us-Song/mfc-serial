@@ -10,11 +10,13 @@ CMycomm::CMycomm()
 
 CMycomm::~CMycomm()
 {
+	
 	if (m_bIsOpenned)
 		Close();
 
 	delete m_pEvent;
 }
+
 
 CMycomm::CMycomm(CString port, CString baudrate, CString parity, CString databit, CString stopbit) 
 { 
@@ -233,7 +235,7 @@ BOOL CMycomm::Create(HWND hWnd)
 	return TRUE; 
 }
 
-BOOL CMycomm::Send(LPCTSTR outbuf, int len) 
+BOOL CMycomm::Send(LPCTSTR outbuf, int len)
 { 
 	BOOL bRet = TRUE; 
 	DWORD ErrorFlags; 
@@ -261,8 +263,8 @@ BOOL CMycomm::Send(LPCTSTR outbuf, int len)
 			else 
 				GetOverlappedResult(m_hComDev, &m_OLW, &BytesWritten, FALSE); // 바이트수 얻는 함수,성공시 0이아닌 반환값, 실패시 0반환, write의 인수인 overlapped 구조체를 인수로 하여 write의 결과를 얻게해줌
 		} 
-		else /* I/O error */ 
-			bRet = FALSE; /* ignore error */ 
+		else 
+			bRet = FALSE; //ignore error 
 	} 
 	
 	ClearCommError(m_hComDev, &ErrorFlags, &ComStat); 

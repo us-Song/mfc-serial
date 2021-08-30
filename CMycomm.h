@@ -14,6 +14,10 @@
 
 class CMycomm : public CCmdTarget
 {
+
+private:
+	
+
 public: 
 	CMycomm();
 	~CMycomm();
@@ -32,14 +36,17 @@ public:
 	char m_sInBuf[MAXBUF * 2]; 
 	int m_nLength; 
 	CEvent* m_pEvent; 
+
 public: 
 	void Clear(); 
 	int Receive(LPSTR inbuf, int len); 
 	BOOL Send(LPCTSTR outbuf, int len); 
 	BOOL Create(HWND hWnd); 
-	void HandleClose(); void Close(); 
+	void HandleClose(); 
+	void Close(); 
 	void ResetSerial(); 
 	CMycomm(CString port, CString baudrate, CString parity, CString databit, CString stopbit);
+
 };
 
 #endif

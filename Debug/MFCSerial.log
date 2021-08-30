@@ -1,4 +1,5 @@
 ﻿  CMycomm.cpp
+  Controller.cpp
   MFCSerial.cpp
   MFCSerialDlg.cpp
 C:\Users\dmltj\source\repos\MFCSerial\MFCSerial\MFCSerialDlg.cpp(91,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
